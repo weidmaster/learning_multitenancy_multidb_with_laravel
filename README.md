@@ -32,6 +32,15 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
     $table->string('db_password');
     ```
 
+1. Definir nova configuração de banco de dados em config/database.php
+    - basicamente duplicar a entrada para o mysql e renomear para tenant
+    - isso mantém a conexão padrão mysql para o banco de dados central
+
+1. Criar classe app\Tenant\ManagerTenant.php
+    - responsável por gerenciar tenants
+    - desconecta conexão padrão tenant
+    - seta nova conexão dinamicamente para tenant
+
 1. Mudar conexão com o banco de dados dinamicamente pelo domínio através de middleware
 
     ```php artisan make:middleware Tenant\\TenantMiddleware```
