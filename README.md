@@ -12,6 +12,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 - O cadastro de tenants inclui os dados de acesso ao banco de dados próprio
   - isso permite ter o servidor de banco de dados separado
 - O acesso de cada tenant é por domínio
+- A conexão com o banco de dados é setada dinamicamente a cada acesso
 
 ## Fluxo de Desenvolvimento
 
@@ -29,5 +30,18 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
     $table->string('db_hostname');
     $table->string('db_username');
     $table->string('db_password');
+    ```
+
+1. Mudar conexão com o banco de dados dinamicamente pelo domínio através de middleware
+
+    ```php artisan make:middleware Tenant\\TenantMiddleware```
+
+    - registrar middleware como global em app/Http/Kernel.php
+
+    ```php
+    protected $middleware = [
+        ...
+        TenantMiddleware::class,
+    ];
     ```
 
