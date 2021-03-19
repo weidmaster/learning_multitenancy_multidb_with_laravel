@@ -13,6 +13,8 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
   - isso permite ter o servidor de banco de dados separado
 - O acesso de cada tenant é por domínio
 - A conexão com o banco de dados é setada dinamicamente a cada acesso
+- Migrações rodam para cada tenant de forma independente do banco de dados central
+    - existe um comando personalizado para rodar essas migrations
 
 ## Fluxo de Desenvolvimento
 
@@ -53,4 +55,9 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
         TenantMiddleware::class,
     ];
     ```
+
+1. Criar pasta database/migrations/tenant
+    - migrations específicas de cada tenant
+    - copiar as migrations padrão do Laravel
+    - ```composer dumpautoload```
 
