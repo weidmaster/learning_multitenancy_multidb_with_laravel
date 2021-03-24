@@ -16,6 +16,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 - Migrações rodam para cada tenant de forma independente do banco de dados central
     - existe um comando personalizado para rodar essas migrations
 - O cadastro de novos tenants e gerenciamento só é feito pelo domínio principal
+    - a criação de um novo tenant gera o banco de dados automaticamente
 
 ## Fluxo de Desenvolvimento
 
@@ -100,3 +101,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
         ->namespace($this->namespace)
         ->group(base_path('routes/tenant.php'));
     ```
+
+1. Criar controlador e rota para gerenciar os Tenants (CRUD)
+
+    ```php artisan make:controller Tenant\\CompanyController```
