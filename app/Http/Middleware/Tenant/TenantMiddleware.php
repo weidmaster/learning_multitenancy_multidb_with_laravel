@@ -18,13 +18,15 @@ class TenantMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        // same as new ManagerTenant;
+        $manager = app(ManagerTenant::class);
+
         $company = $this->getCompany($request->getHost());
 
         if (!$company && $request->url() != route('404.tenant')) {
             return redirect()->route('404.tenant');
-        } else if ($request->url() != route('404.tenant')) {
-            // same as new ManagerTenant;
-            app(ManagerTenant::class)->setConnection($company);
+        } else if ($request->url() != route('404.tenant') && !$manager->isMainDomain()) {
+            $manager->setConnection($company);
         }
 
         return $next($request);

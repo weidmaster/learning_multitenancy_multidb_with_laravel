@@ -40,6 +40,13 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
     - isso mantém a conexão padrão mysql para o banco de dados central
     - alterar a chave default DB_CONNECTION para tenant
 
+1. Criar arquivo de configuração config/tenant.php
+    ```php
+        return [
+            'main_domain' => 'dominio-principal.com'
+        ];
+    ```
+
 1. Criar classe app\Tenant\ManagerTenant.php
     - responsável por gerenciar tenants
     - desconecta conexão padrão tenant
@@ -71,13 +78,6 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 1. Criar arquivo routes/tenant.php
     - responsável pelas rotas de gerenciamento de tenant
     - apenas o domínio principal pode acessar
-
-1. Criar arquivo de configuração config/tenant.php
-    ```php
-        return [
-            'main_domain' => 'dominio-principal.com'
-        ];
-    ```
 
 1. Restringir o acesso das rotas de tenant usando middleware
 

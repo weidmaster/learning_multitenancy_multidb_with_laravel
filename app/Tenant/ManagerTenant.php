@@ -22,4 +22,9 @@ class ManagerTenant
         //ping the connection to test if it is live
         Schema::connection('tenant')->getConnection()->reconnect();
     }
+
+    public function isMainDomain()
+    {
+        return request()->getHost() == config('tenant.main_domain');
+    }
 }
