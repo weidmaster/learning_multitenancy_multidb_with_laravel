@@ -15,6 +15,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 - A conexão com o banco de dados é setada dinamicamente a cada acesso
 - Migrações rodam para cada tenant de forma independente do banco de dados central
     - existe um comando personalizado para rodar essas migrations
+- O cadastro de novos tenants e gerenciamento só é feito pelo domínio principal
 
 ## Fluxo de Desenvolvimento
 
@@ -66,3 +67,36 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
     - ```php artisan make:command Tenant\\TenantMigrations```
     - conecta em cada banco de dados de tenant ou apenas um tenant específico
     - roda o comando migrate com force usando a pasta migrations/tenant
+
+1. Criar arquivo routes/tenant.php
+    - responsável pelas rotas de gerenciamento de tenant
+    - apenas o domínio principal pode acessar
+
+1. Criar arquivo de configuração config/tenant.php
+    ```php
+        return [
+            'main_domain' => 'dominio-principal.com'
+        ];
+    ```
+
+1. Restringir o acesso das rotas de tenant usando middleware
+
+    ```php artisan make:middleware Tenant\\CheckMainDomain```
+
+    - registrar como middleware de rota em app/Http/Kernel.php
+
+        ```php
+        protected $routeMiddleware = [
+            ...
+            'check.main.domain' => CheckMainDomain::class,
+        ];
+        ```
+
+1. Registrar as rotas de tenant em app/Providers/RouteServiceProvider.php
+
+    ```php
+    Route::prefix('tenants')
+        ->middleware('web','check.main.domain')
+        ->namespace($this->namespace)
+        ->group(base_path('routes/tenant.php'));
+    ```
