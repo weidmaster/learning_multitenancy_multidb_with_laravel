@@ -37,6 +37,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 1. Definir nova configuração de banco de dados em config/database.php
     - basicamente duplicar a entrada para o mysql e renomear para tenant
     - isso mantém a conexão padrão mysql para o banco de dados central
+    - alterar a chave default DB_CONNECTION para tenant
 
 1. Criar classe app\Tenant\ManagerTenant.php
     - responsável por gerenciar tenants
@@ -61,3 +62,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
     - copiar as migrations padrão do Laravel
     - ```composer dumpautoload```
 
+1. Criar comando Artisan para migrations de Tenant
+    - ```php artisan make:command Tenant\\TenantMigrations```
+    - conecta em cada banco de dados de tenant
+    - roda o comando migrate com force usando a pasta migrations/tenant
