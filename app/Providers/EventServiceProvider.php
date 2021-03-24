@@ -7,6 +7,9 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
+use App\Events\Tenant\CompanyCreated;
+use App\Listeners\Tenant\CreateCompanyDatabase;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -18,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        CompanyCreated::class => [
+            CreateCompanyDatabase::class
+        ]
     ];
 
     /**

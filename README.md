@@ -17,6 +17,7 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
     - existe um comando personalizado para rodar essas migrations
 - O cadastro de novos tenants e gerenciamento só é feito pelo domínio principal
     - a criação de um novo tenant gera o banco de dados automaticamente
+    - a criação do banco depende do evento disparado
 
 ## Fluxo de Desenvolvimento
 
@@ -102,6 +103,28 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
         ->group(base_path('routes/tenant.php'));
     ```
 
+1. Criar classe app\Tenant\Database\DatabaseManager.php
+    - responsável por manipular o banco de dados diretamente
+
+1. Criar o evento e ouvinte de criação de Tenant
+    - adicionar entrada em app/Providers/EventServiceProvider.php
+        ```php
+        use ...;
+        use App\Events\Tenant\CompanyCreated;
+        use App\Listeners\Tenant\CreateCompanyDatabase;
+        ...
+        protected $listen = [
+            ...,
+            CompanyCreated::class => [
+                CreateCompanyDatabase::class
+            ]
+        ];
+        ```
+    - mesmo que as classes não existam, o Laravel irá criar depois
+    - ```php artisan event:generate```
+    - o evento é disparado quando cria um Tenant e o ouvinte se prepara para criar o novo banco de dados
+
 1. Criar controlador e rota para gerenciar os Tenants (CRUD)
 
-    ```php artisan make:controller Tenant\\CompanyController```
+    - ```php artisan make:controller Tenant\\CompanyController```
+    - método store() chama o evento CompanyCreated
