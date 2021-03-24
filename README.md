@@ -64,5 +64,5 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 
 1. Criar comando Artisan para migrations de Tenant
     - ```php artisan make:command Tenant\\TenantMigrations```
-    - conecta em cada banco de dados de tenant
+    - conecta em cada banco de dados de tenant ou apenas um tenant específico
     - roda o comando migrate com force usando a pasta migrations/tenant
