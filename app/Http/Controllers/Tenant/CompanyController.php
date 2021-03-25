@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Events\Tenant\CompanyCreated;
+use App\Events\Tenant\DatabaseCreated;
 use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -30,7 +31,14 @@ class CompanyController extends Controller
             'db_password' => 'root'
         ]);
 
-        event(new CompanyCreated($company));
+        //In a real application there would be a checkbox to decide
+        // if the database would be created or use an external Database
+        // and just run the migrations
+        if (true) {
+            event(new CompanyCreated($company));
+        } else {
+            event(new DatabaseCreated($company));
+        }
 
         dd($company);
     }
