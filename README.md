@@ -106,6 +106,22 @@ Isolar clientes com banco de dados diferentes, usando a mesma aplicação e cód
 1. Criar classe app\Tenant\Database\DatabaseManager.php
     - responsável por manipular o banco de dados diretamente
 
+1. Criar o evento e ouvinte de criação de banco de dados para o Tenant
+    - adicionar entrada em app/Providers/EventServiceProvider.php
+        ```php
+        use ...;
+        use App\Events\Tenant\DatabaseCreated;
+        use App\Listeners\Tenant\RunMigrationsTenant;
+        ...
+        protected $listen = [
+            ...,
+            DatabaseCreated::class => [
+                RunMigrationsTenant::class
+            ]
+        ];
+        ```
+    - o evento é disparado quando é criado o banco de dados e é responsável por rodar as migrations de tenants
+
 1. Criar o evento e ouvinte de criação de Tenant
     - adicionar entrada em app/Providers/EventServiceProvider.php
         ```php

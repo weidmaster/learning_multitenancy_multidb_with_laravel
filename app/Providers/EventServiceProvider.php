@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Event;
 
 use App\Events\Tenant\CompanyCreated;
 use App\Listeners\Tenant\CreateCompanyDatabase;
+use App\Events\Tenant\DatabaseCreated;
+use App\Listeners\Tenant\RunMigrationsTenant;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         CompanyCreated::class => [
             CreateCompanyDatabase::class
+        ],
+        DatabaseCreated::class => [
+            RunMigrationsTenant::class
         ]
     ];
 
