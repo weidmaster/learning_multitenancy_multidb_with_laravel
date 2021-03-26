@@ -8,6 +8,7 @@ use App\Models\Company;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\StoreUpdateCompanyFormRequest;
 
 class CompanyController extends Controller
 {
@@ -16,30 +17,82 @@ class CompanyController extends Controller
     public function __construct(Company $company)
     {
         $this->company = $company;
+
+        $this->middleware('auth');
     }
 
-    public function store(Request $request)
+    public function index()
     {
-        //Here would be a real CRUD functionality.
-        //This is just for test purposes
-        $company = $this->company->create([
-            'name' => 'Empresa XPTO' . Str::random(5),
-            'domain' => Str::random(5) . 'empresaxpto.com',
-            'db_database' => 'multi_tenant' . Str::random(5),
-            'db_hostname' => 'mysql',
-            'db_username' => 'root',
-            'db_password' => 'root'
-        ]);
+        $companies = $this->company->latest()->paginate();
 
-        //In a real application there would be a checkbox to decide
-        // if the database would be created or use an external Database
-        // and just run the migrations
-        if (true) {
+        return view('tenants.companies.index', compact('companies'));
+    }
+
+    public function create()
+    {
+        return view('tenants.companies.create');
+    }
+
+    public function store(StoreUpdateCompanyFormRequest $request)
+    {
+        $company = $this->company->create($request->all());
+
+        if ($request->has('create_database')) {
             event(new CompanyCreated($company));
         } else {
             event(new DatabaseCreated($company));
         }
 
-        dd($company);
+        return redirect()
+            ->route('company.index')
+            ->withSuccess('Cadastro realizado com sucesso!');
+    }
+
+    public function show($domain)
+    {
+        $company = $this->company->where('domain', $domain)->first();
+
+        if (!$company) {
+            return redirect()->back();
+        }
+
+        return view('tenants.companies.show', compact('company'));
+    }
+
+    public function edit($domain)
+    {
+        $company = $this->company->where('domain', $domain)->first();
+
+        if (!$company) {
+            return redirect()->back();
+        }
+
+        return view('tenants.companies.edit', compact('company'));
+    }
+
+    public function update(StoreUpdateCompanyFormRequest $request, $id)
+    {
+        if (!$company = $this->company->find($id)) {
+            return redirect()->back()->withInput();
+        }
+
+        $company->update($request->all());
+
+        return redirect()
+            ->route('company.index')
+            ->withSuccess('Atualizado com sucesso!');
+    }
+
+    public function destroy($id)
+    {
+        if (!$company = $this->company->find($id)) {
+            return redirect()->back();
+        }
+
+        $company->delete();
+
+        return redirect()
+            ->route('company.index')
+            ->withSuccess('Deletado com sucesso!');
     }
 }

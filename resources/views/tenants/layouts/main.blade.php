@@ -147,7 +147,7 @@
                                             id="dashboards_menu">
                                             <li class="sidebar-menu-item active">
                                                 <a class="sidebar-menu-button"
-                                                   href="{{ route('tenant') }}">
+                                                   href="{{ route('company.index') }}">
                                                     <span class="sidebar-menu-text">Empresas</span>
                                                 </a>
                                             </li>

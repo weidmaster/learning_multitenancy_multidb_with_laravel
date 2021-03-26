@@ -26,7 +26,7 @@
                             <i class="material-icons text-white icon-18pt">business</i>
                         </span>
                     </div>
-                    <a href="#"
+                    <a href="{{ route('company.index') }}"
                        class="text-dark">
                         <strong>Empresas</strong>
                     </a>
