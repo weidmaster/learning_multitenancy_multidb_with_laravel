@@ -1,0 +1,1 @@
+@extends('tenants.layouts.main')
